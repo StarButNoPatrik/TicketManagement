@@ -1,17 +1,13 @@
 package system;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.List;
-
-
+import java.io.*;
+import java.util.*;
 
 import Entity.Attendee;
+import Entity.Event;
 import Entity.Organiser;
+import Entity.Ticket;
 import Entity.User;
+import exceptions.InvalidBookingException;
 
 public class EventBookingSystem {
     private List<Attendee> attendees = new ArrayList<>();
@@ -34,30 +30,54 @@ public class EventBookingSystem {
     }
 
     // Ticket Booking
-    public void bookTicket(Attendee attendee, Event event) {
-        if (event.isAvailable()) {
-            tickets.add(new Ticket(attendee, event));
-            event.setAvailableTickets(event.getAvailableTickets() - 1);
+    public void bookTicket(String attendeeId, String eventTitle) throws InvalidBookingException {
+        Attendee attendee = attendees.stream()
+                .filter(a -> a.getId().equals(attendeeId))
+                .findFirst()
+                .orElse(null);
+
+        Event event = events.stream()
+                .filter(e -> e.getTitle().equalsIgnoreCase(eventTitle))
+                .findFirst()
+                .orElse(null);
+
+        if (attendee == null || event == null || !event.isAvailable()) {
+            throw new InvalidBookingException("Invalid booking attempt.");
         }
+
+        Ticket ticket = new Ticket(attendee, event);
+        tickets.add(ticket);
+        event.setAvailableTickets(event.getAvailableTickets() - 1);
+        System.out.println("Ticket successfully booked.");
     }
 
-    // File Persistence
-    public void saveEvents() throws IOException {
+
+    public void saveEvents() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("events.dat"))) {
             oos.writeObject(events);
+            System.out.println("Events saved successfully.");
+        } catch (IOException e) {
+            System.out.println("Error saving events.");
         }
     }
 
     @SuppressWarnings("unchecked")
-    public void loadEvents() throws IOException, ClassNotFoundException {
+	public void loadEvents() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("events.dat"))) {
             events = (List<Event>) ois.readObject();
+            System.out.println("Events loaded successfully.");
+        } catch (Exception e) {
+            System.out.println("No previous events found.");
         }
     }
-
     // Display
     public void showEvents() {
-        events.forEach(event -> System.out.println(event.getTitle() + " - Tickets: " + event.getAvailableTickets()));
+        if (events.isEmpty()) {
+            System.out.println("No events available.");
+        } else {
+            for (Event e : events) {
+                System.out.println(e);
+            }
+        }
     }
 }
-
