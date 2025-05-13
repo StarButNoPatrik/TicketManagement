@@ -1,0 +1,22 @@
+package Entity;
+
+public class Organiser extends user {
+    public Organiser(String name, String id) {
+        super(name, id); 
+        this.name = name;
+        this.id = id;
+    }
+    boolean active = true;
+    boolean isActive() {
+        return active;
+    }
+    boolean setActive(boolean active) {
+        this.active = active;
+        return this.active; 
+    }
+    void showProfile() {
+        System.out.println("Organiser ID: " + id);
+        System.out.println("Organiser Name: " + name);
+    }
+    
+}
