@@ -1,6 +1,6 @@
 package Entity;
 
-public abstract class user {
+public abstract class User {
     protected String name;
     protected String id;
     public user(String name, String id) {
