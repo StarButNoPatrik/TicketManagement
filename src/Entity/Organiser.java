@@ -14,7 +14,8 @@ public class Organiser extends User {
         this.active = active;
         return this.active; 
     }
-    void showProfile() {
+    @Override
+    public void showProfile() {
         System.out.println("Organiser ID: " + id);
         System.out.println("Organiser Name: " + name);
     }
