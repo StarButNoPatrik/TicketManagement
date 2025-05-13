@@ -1,6 +1,6 @@
 package Entity;
 
-public class Organiser extends user {
+public class Organiser extends User {
     public Organiser(String name, String id) {
         super(name, id); 
         this.name = name;
