@@ -1,14 +1,6 @@
 package system;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.List;
-
-
-
+import java.io.*;
+import java.util.*;
 import Entity.Attendee;
 import Entity.Organiser;
 import Entity.User;
@@ -34,23 +26,37 @@ public class EventBookingSystem {
     }
 
     // Ticket Booking
-    public void bookTicket(Attendee attendee, Event event) {
-        if (event.isAvailable()) {
-            tickets.add(new Ticket(attendee, event));
-            event.setAvailableTickets(event.getAvailableTickets() - 1);
+    public void bookTicket(String attendeeId, String eventTitle) throws InvalidBookingException {
+        Attendee attendee = attendees.stream()
+                .filter(a -> a.id.equals(attendeeId))
+                .findFirst()
+                .orElse(null);
+
+        Event event = events.stream()
+                .filter(e -> e.getTitle().equalsIgnoreCase(eventTitle))
+                .findFirst()
+                .orElse(null);
+
+        if (attendee == null || event == null || !event.isAvailable()) {
+            throw new InvalidBookingException("Invalid booking attempt.");
         }
+
+        Ticket ticket = new Ticket(attendee, event);
+        tickets.add(ticket);
+        event.setAvailableTickets(event.getAvailableTickets() - 1);
+        System.out.println("Ticket successfully booked.");
     }
 
     // File Persistence
     public void saveEvents() throws IOException {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("events.dat"))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("events.txt"))) {
             oos.writeObject(events);
         }
     }
 
     @SuppressWarnings("unchecked")
     public void loadEvents() throws IOException, ClassNotFoundException {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("events.dat"))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("events.txt"))) {
             events = (List<Event>) ois.readObject();
         }
     }
