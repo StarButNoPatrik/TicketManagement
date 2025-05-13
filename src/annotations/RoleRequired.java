@@ -8,5 +8,5 @@ import java.lang.annotation.Target;
 @Target(TYPE)
 @Retention(RUNTIME)
 public @interface RoleRequired {
-    String role() default "Admin";
+    String role();
 }
