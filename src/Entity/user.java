@@ -9,5 +9,11 @@ public abstract class User {
     }
     public abstract void showProfile();
 
-    
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
 }
