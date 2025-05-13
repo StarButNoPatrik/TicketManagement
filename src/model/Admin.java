@@ -3,6 +3,7 @@ package model;
 import java.util.Iterator;
 import java.util.List;
 
+import Entity.Event;
 import Entity.User;
 import annotations.RoleRequired;
 
