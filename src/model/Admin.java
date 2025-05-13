@@ -2,14 +2,15 @@ package model;
 
 import java.util.Iterator;
 import java.util.List;
-import org.w3c.dom.events.Event;
 
-@RoleRequired
+import Entity.User;
+import annotations.RoleRequired;
+
+@RoleRequired(role = "Admin")
 public class Admin extends User {
     public Admin(String id, String name) {
         super(id, name);
     }
-
     @Override
     public void showProfile() {
         System.out.println("Admin Profile - ID: " + id + ", Name: " + name);
