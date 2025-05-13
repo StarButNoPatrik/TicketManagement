@@ -7,7 +7,7 @@ public abstract class User {
         this.name = name;
         this.id = id;
     }
-    abstract void showProfile();
+    public abstract void showProfile();
 
     
 }
